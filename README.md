@@ -1,17 +1,15 @@
-
 arrayvec
 ========
-[![Crates.io: arrayvec](https://img.shields.io/crates/v/arrayvec.svg)](https://crates.io/crates/arrayvec)
-[![Crates.io: nodrop](https://img.shields.io/crates/v/nodrop.svg)](https://crates.io/crates/nodrop)
-[![Documentation](https://docs.rs/arrayvec/badge.svg)](https://docs.rs/arrayvec)
-[![Build Status](https://travis-ci.org/bluss/arrayvec.svg?branch=master)](https://travis-ci.org/bluss/arrayvec)
 [![License: Apache](https://img.shields.io/badge/License-Apache%202.0-red.svg)](LICENSE-APACHE)
 OR
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-A vector with fixed capacity.
+A vector with fixed capacity. Forked from original at https://github.com/bluss/arrayvec.
 
-Please read the [`API documentation here`](https://docs.rs/arrayvec)
+This adds several methods and removes ArrayString. Methods added:
+- remove_unchecked
+- pop_unchecked
+- insert_unchecked
 
 # License
 

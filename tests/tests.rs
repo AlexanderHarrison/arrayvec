@@ -1,13 +1,10 @@
 extern crate arrayvec;
-#[macro_use] extern crate matches;
+#[macro_use]
+extern crate matches;
 
 use arrayvec::ArrayVec;
-use arrayvec::ArrayString;
-use std::mem;
 use arrayvec::CapacityError;
-
-use std::collections::HashMap;
-
+use std::mem;
 
 #[test]
 fn test_simple() {
@@ -223,7 +220,6 @@ fn test_drop_panics() {
     // Check that all the elements drop, even if the first drop panics.
     assert_eq!(flag.get(), 3);
 
-
     flag.set(0);
     {
         let mut array = ArrayVec::<[Bump; 16]>::new();
@@ -243,8 +239,6 @@ fn test_drop_panics() {
         // Check that all the tail elements drop, even if the first drop panics.
         assert_eq!(flag.get(), tail_len as i32);
     }
-
-
 }
 
 #[test]
@@ -443,7 +437,7 @@ fn test_into_inner_3_() {
     assert_eq!(v.into_inner().unwrap(), [1, 2, 3, 4]);
 }
 
-#[cfg(feature="std")]
+#[cfg(feature = "std")]
 #[test]
 fn test_write() {
     use std::io::Write;
@@ -477,91 +471,6 @@ fn array_clone_from() {
     t.clone_from(&v);
     assert_eq!(&t, &reference[..]);
 }
-
-#[cfg(feature="std")]
-#[test]
-fn test_string() {
-    use std::error::Error;
-
-    let text = "hello world";
-    let mut s = ArrayString::<[_; 16]>::new();
-    s.try_push_str(text).unwrap();
-    assert_eq!(&s, text);
-    assert_eq!(text, &s);
-
-    // Make sure Hash / Eq / Borrow match up so we can use HashMap
-    let mut map = HashMap::new();
-    map.insert(s, 1);
-    assert_eq!(map[text], 1);
-
-    let mut t = ArrayString::<[_; 2]>::new();
-    assert!(t.try_push_str(text).is_err());
-    assert_eq!(&t, "");
-
-    t.push_str("ab");
-    // DerefMut
-    let tmut: &mut str = &mut t;
-    assert_eq!(tmut, "ab");
-
-    // Test Error trait / try
-    let t = || -> Result<(), Box<dyn Error>> {
-        let mut t = ArrayString::<[_; 2]>::new();
-        t.try_push_str(text)?;
-        Ok(())
-    }();
-    assert!(t.is_err());
-}
-
-#[test]
-fn test_string_from() {
-    let text = "hello world";
-	// Test `from` constructor
-    let u = ArrayString::<[_; 11]>::from(text).unwrap();
-    assert_eq!(&u, text);
-    assert_eq!(u.len(), text.len());
-}
-
-#[test]
-fn test_string_parse_from_str() {
-    let text = "hello world";
-    let u: ArrayString<[_; 11]> = text.parse().unwrap();
-    assert_eq!(&u, text);
-    assert_eq!(u.len(), text.len());
-}
-
-#[test]
-fn test_string_from_bytes() {
-    let text = "hello world";
-    let u = ArrayString::from_byte_string(b"hello world").unwrap();
-    assert_eq!(&u, text);
-    assert_eq!(u.len(), text.len());
-}
-
-#[test]
-fn test_string_clone() {
-    let text = "hi";
-    let mut s = ArrayString::<[_; 4]>::new();
-    s.push_str("abcd");
-    let t = ArrayString::<[_; 4]>::from(text).unwrap();
-    s.clone_from(&t);
-    assert_eq!(&t, &s);
-}
-
-#[test]
-fn test_string_push() {
-    let text = "abcαβγ";
-    let mut s = ArrayString::<[_; 8]>::new();
-    for c in text.chars() {
-        if let Err(_) = s.try_push(c) {
-            break;
-        }
-    }
-    assert_eq!("abcαβ", &s[..]);
-    s.push('x');
-    assert_eq!("abcαβx", &s[..]);
-    assert!(s.try_push('x').is_err());
-}
-
 
 #[test]
 fn test_insert_at_length() {
@@ -643,24 +552,14 @@ fn test_sizes() {
     assert_eq!(vec![0u8; v.len()], &v[..]);
 }
 
-#[test]
-fn test_default() {
-    use std::net;
-    let s: ArrayString<[u8; 4]> = Default::default();
-    // Something without `Default` implementation.
-    let v: ArrayVec<[net::TcpStream; 4]> = Default::default();
-    assert_eq!(s.len(), 0);
-    assert_eq!(v.len(), 0);
-}
-
-#[cfg(feature="array-sizes-33-128")]
+#[cfg(feature = "array-sizes-33-128")]
 #[test]
 fn test_sizes_33_128() {
     ArrayVec::from([0u8; 52]);
     ArrayVec::from([0u8; 127]);
 }
 
-#[cfg(feature="array-sizes-129-255")]
+#[cfg(feature = "array-sizes-129-255")]
 #[test]
 fn test_sizes_129_255() {
     ArrayVec::from([0u8; 237]);
